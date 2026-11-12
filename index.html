@@ -4,41 +4,28 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity Web Player | winnas</title>
-    <!-- Viewport definition for all devices to ensure proper layout scale -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
-    <style>
-      html, body {
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        overflow: hidden; /* Prevents scrollbars */
-        background: #231F20;
-      }
-      #unity-canvas {
-        width: 100% !important;
-        height: 100% !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-    </style>
   </head>
-  <body>
-    <!-- Hardcoded width, height, and inline pixel styles removed -->
-    <canvas id="unity-canvas" tabindex="-1"></canvas>
-    
+  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <canvas id="unity-canvas" width=960 height=600 tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
     <script src="Build/projectbuilds.loader.js"></script>
     <script>
-      // Extra safety checks for smooth rendering
-      var canvas = document.querySelector("#unity-canvas");
-
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile-specific layout overrides if needed
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+
+        var canvas = document.querySelector("#unity-canvas");
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
         canvas.style.position = "fixed";
+
+        document.body.style.textAlign = "left";
+
       }
 
-      createUnityInstance(canvas, {
+      createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
         dataUrl: "Build/projectbuilds.data.unityweb",
         frameworkUrl: "Build/projectbuilds.framework.js.unityweb",
@@ -46,9 +33,9 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "finn78795",
         productName: "winnas",
-        productVersion: "2.5",
-        // Force the WebGL render buffer to match the CSS canvas scale
-        matchWebGLToCanvasSize: true, 
+        productVersion: "1.2",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
       }).catch((message) => {
         alert(message);
